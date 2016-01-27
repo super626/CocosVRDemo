@@ -2,6 +2,8 @@
 //
 //
 
+#include "base/ccMacros.h"
+
 #if CC_TARGET_PLATFORM != CC_PLATFORM_IOS
 
 #include "HeadSensorWrapper.h"

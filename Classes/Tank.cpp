@@ -1,5 +1,5 @@
 #include "Tank.h"
-#include "platform/ios/CardboardSDK/CocosVRRender.h"
+#include "vr/CocosVRRender.h"
 
 USING_NS_CC;
 
