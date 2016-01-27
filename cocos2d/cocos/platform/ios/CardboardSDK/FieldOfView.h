@@ -9,8 +9,8 @@
 #ifndef __CardboardVR_iOS__FieldOfView__
 #define __CardboardVR_iOS__FieldOfView__
 
-#import <UIKit/UIKit.h>
-#import <GLKit/GLKit.h>
+#include <string>
+#include "math/Mat4.h"
 
 class FieldOfView
 {
@@ -26,16 +26,16 @@ public:
     float getBottom();
     void setTop(float top);
     float getTop();
-    GLKMatrix4 toPerspectiveMatrix(float near, float far);
+    cocos2d::Mat4 toPerspectiveMatrix(float near, float far);
     bool equals(FieldOfView *other);
-    NSString* toString();
+    std::string toString();
 private:
     float left;
     float right;
     float bottom;
     float top;
 private:
-    GLKMatrix4 frustumM(float left, float right, float bottom, float top, float near, float far);
+    cocos2d::Mat4 frustumM(float left, float right, float bottom, float top, float near, float far);
 };
 
 #endif 

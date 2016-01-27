@@ -14,6 +14,7 @@
 #include <vector>
 #include "Structs.h"
 #include "OrientationEKF.h"
+#include "math/Mat4.h"
 
 class HeadTracker
 {
@@ -22,14 +23,14 @@ public:
     ~HeadTracker();
     void startTracking();
     void stopTracking();
-    GLKMatrix4 getLastHeadView();
+    cocos2d::Mat4 getLastHeadView();
 private:
-    GLKMatrix4 glMatrixFromRotationMatrix(CMRotationMatrix rotationMatrix);
-    GLKMatrix4 getRotateEulerMatrix(float x, float y, float z);
+    cocos2d::Mat4 glMatrixFromRotationMatrix(CMRotationMatrix rotationMatrix);
+    cocos2d::Mat4 getRotateEulerMatrix(float x, float y, float z);
     CMMotionManager *manager;
     // OrientationEKF *tracker;
-    GLKMatrix4 deviceToDisplay;
-    GLKMatrix4 worldToInertialReferenceFrame;
+    cocos2d::Mat4 deviceToDisplay;
+    cocos2d::Mat4 worldToInertialReferenceFrame;
     NSTimeInterval referenceTimestamp;
     NSTimeInterval lastGyroEventTimestamp;
 };

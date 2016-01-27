@@ -11,26 +11,26 @@
 EyeTransform::EyeTransform(EyeParams *params)
 {
     this->eyeParams = params;
-    this->eyeView = GLKMatrix4Identity;
-    this->perspective = GLKMatrix4Identity;
+    this->eyeView = cocos2d::Mat4::IDENTITY;
+    this->perspective = cocos2d::Mat4::IDENTITY;
 }
 
-GLKMatrix4 EyeTransform::getEyeView()
+const cocos2d::Mat4& EyeTransform::getEyeView() const
 {
     return this->eyeView;
 }
 
-void EyeTransform::setEyeView(GLKMatrix4 eyeView)
+void EyeTransform::setEyeView(const cocos2d::Mat4& eyeView)
 {
     this->eyeView = eyeView;
 }
 
-GLKMatrix4 EyeTransform::getPerspective()
+const cocos2d::Mat4& EyeTransform::getPerspective() const
 {
     return this->perspective;
 }
 
-void EyeTransform::setPerspective(GLKMatrix4 perspective)
+void EyeTransform::setPerspective(const cocos2d::Mat4& perspective)
 {
     this->perspective = perspective;
 }

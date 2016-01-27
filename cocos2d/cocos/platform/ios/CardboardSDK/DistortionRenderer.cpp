@@ -7,11 +7,22 @@
 //
 
 #include "DistortionRenderer.h"
+#include "base/ccMacros.h"
+#include "base/CCConsole.h"
+#include "platform/CCGL.h"
 
-#import "GLHelpers.h"
+#ifdef DEBUG
 
-#import <OpenGLES/ES2/glext.h>
+inline void checkGLError()
+{
+    CHECK_GL_ERROR_DEBUG();
+}
 
+#else
+
+#define checkGLError() ;
+
+#endif
 
 DistortionRenderer::DistortionRenderer()
 {
@@ -239,7 +250,7 @@ int DistortionRenderer::createTexture(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, nil);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, 0);
     
     checkGLError();
 
@@ -267,7 +278,7 @@ int DistortionRenderer::setupRenderTextureAndRenderbuffer(int width, int height)
     glGetIntegerv(GL_RENDERBUFFER_BINDING, &oldrb);
     
     this->textureId = this->createTexture(width, height);
-    this->checkGlError(@"setupRenderTextureAndRenderbuffer: create texture");
+    this->checkGlError("setupRenderTextureAndRenderbuffer: create texture");
     
     GLuint renderbufferIds;
     glGenRenderbuffers(1, &renderbufferIds);
@@ -275,7 +286,7 @@ int DistortionRenderer::setupRenderTextureAndRenderbuffer(int width, int height)
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height);
     
     this->renderbufferId = renderbufferIds;
-    this->checkGlError(@"setupRenderTextureAndRenderbuffer: create renderbuffer");
+    this->checkGlError("setupRenderTextureAndRenderbuffer: create renderbuffer");
     
     GLuint framebufferIds;
     glGenFramebuffers(1, &framebufferIds);
@@ -288,7 +299,7 @@ int DistortionRenderer::setupRenderTextureAndRenderbuffer(int width, int height)
     
     GLuint status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE) {
-        [NSException raise:@"DistortionRenderer" format:@"Framebuffer is not complete: %d", status];
+        cocos2d::log("DistortionRenderer Framebuffer is not complete: %d", status);
     }
     
 //    glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -304,7 +315,7 @@ int DistortionRenderer::loadShader(GLenum shaderType, const GLchar *source)
 {
     GLuint shader = glCreateShader(shaderType);
     if (shader != 0) {
-        glShaderSource(shader, 1, &source, nil);
+        glShaderSource(shader, 1, &source, 0);
         glCompileShader(shader);
         GLint status;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
@@ -312,7 +323,7 @@ int DistortionRenderer::loadShader(GLenum shaderType, const GLchar *source)
         {
             GLchar message[256];
             glGetShaderInfoLog(shader, sizeof(message), 0, &message[0]);
-            NSLog(@"Could not compile shader %d:\n%s", shaderType, message);
+//            cocos2d::log("Could not compile shader %d:\n%s", shaderType, message);
             glDeleteShader(shader);
             shader = 0;
         }
@@ -336,16 +347,16 @@ int DistortionRenderer::createProgram(const GLchar *vertexSource, const GLchar *
     GLuint program = glCreateProgram();
     if (program != 0) {
         glAttachShader(program, vertexShader);
-        this->checkGlError(@"glAttachShader");
+        this->checkGlError("glAttachShader");
         glAttachShader(program, pixelShader);
-        this->checkGlError(@"glAttachShader");
+        this->checkGlError("glAttachShader");
         glLinkProgram(program);
         GLint status;
         glGetProgramiv(program, GL_LINK_STATUS, &status);
         if (status == GL_FALSE) {
             GLchar message[256];
             glGetProgramInfoLog(program, sizeof(message), 0, &message[0]);
-            NSLog(@"Could not link program:\n%s", message);
+//            cocos2d::log("Could not link program:\n%s", message);
             glDeleteProgram(program);
             program = 0;
         }
@@ -361,50 +372,50 @@ DistortionRenderer::ProgramHolder *DistortionRenderer::createProgramHolder()
     ProgramHolder *holder = new ProgramHolder();
     holder->program = this->createProgram("attribute vec2 aPosition;\nattribute float aVignette;\nattribute vec2 aTextureCoord;\nvarying vec2 vTextureCoord;\nvarying float vVignette;\nuniform float uTextureCoordScale;\nvoid main() {\n    gl_Position = vec4(aPosition, 0.0, 1.0);\n    vTextureCoord = aTextureCoord.xy * uTextureCoordScale;\n    vVignette = aVignette;\n}\n", "precision mediump float;\nvarying vec2 vTextureCoord;\nvarying float vVignette;\nuniform sampler2D uTextureSampler;\nvoid main() {\n    gl_FragColor = vVignette * texture2D(uTextureSampler, vTextureCoord);\n}\n");
     if (holder->program == 0) {
-        [NSException raise:@"DistortionRenderer" format:@"Could not create program"];
+        cocos2d::log("DistortionRenderer Could not create program");
     }
     holder->aPosition = glGetAttribLocation(holder->program, "aPosition");
-    this->checkGlError(@"glGetAttribLocation aPosition");
+    this->checkGlError("glGetAttribLocation aPosition");
     if (holder->aPosition == -1) {
-        [NSException raise:@"DistortionRenderer" format:@"Could not get attrib location for aPosition"];
+        cocos2d::log("DistortionRenderer Could not get attrib location for aPosition");
     }
     holder->aVignette = glGetAttribLocation(holder->program, "aVignette");
-    this->checkGlError(@"glGetAttribLocation aVignette");
+    this->checkGlError("glGetAttribLocation aVignette");
     if (holder->aVignette == -1)
     {
-        [NSException raise:@"DistortionRenderer" format:@"Could not get attrib location for aVignette"];
+        cocos2d::log("DistortionRenderer Could not get attrib location for aVignette");
     }
     holder->aTextureCoord = glGetAttribLocation(holder->program, "aTextureCoord");
-    this->checkGlError(@"glGetAttribLocation aTextureCoord");
+    this->checkGlError("glGetAttribLocation aTextureCoord");
     if (holder->aTextureCoord == -1)
     {
-        [NSException raise:@"DistortionRenderer" format:@"Could not get attrib location for aTextureCoord"];
+        cocos2d::log("DistortionRenderer Could not get attrib location for aTextureCoord");
     }
     holder->uTextureCoordScale = glGetUniformLocation(holder->program, "uTextureCoordScale");
-    this->checkGlError(@"glGetUniformLocation uTextureCoordScale");
+    this->checkGlError("glGetUniformLocation uTextureCoordScale");
     if (holder->uTextureCoordScale == -1)
     {
-        [NSException raise:@"DistortionRenderer" format:@"Could not get attrib location for uTextureCoordScale"];
+        cocos2d::log("DistortionRenderer Could not get attrib location for uTextureCoordScale");
     }
     holder->uTextureSampler = glGetUniformLocation(holder->program, "uTextureSampler");
-    this->checkGlError(@"glGetUniformLocation uTextureSampler");
+    this->checkGlError("glGetUniformLocation uTextureSampler");
     if (holder->uTextureSampler == -1)
     {
-        [NSException raise:@"DistortionRenderer" format:@"Could not get attrib location for uTextureSampler"];
+        cocos2d::log("DistortionRenderer Could not get attrib location for uTextureSampler");
     }
     
     checkGLError();
     
-    // NSLog(@"ProgramHolder created %p %d", this, holder->program);
+    // cocos2d::log("ProgramHolder created %p %d", this, holder->program);
     
     return holder;
 }
 
-void DistortionRenderer::checkGlError(NSString* op)
+void DistortionRenderer::checkGlError(const std::string& op)
 {
     int error = glGetError();
     if (error != 0) {
-        [NSException raise:@"DistortionRenderer" format:@"%@: glError %d", op, error];
+        cocos2d::log("DistortionRenderer %s glError %d", op.c_str(), error);
     }
 }
 
@@ -522,8 +533,9 @@ DistortionRenderer::DistortionMesh::DistortionMesh(EyeParams *eye,
 
 //EyeViewport
 
-NSString* DistortionRenderer::EyeViewport::toString()
+std::string DistortionRenderer::EyeViewport::toString()
 {
-    return [NSString stringWithFormat:@"EyeViewport {x:%f y:%f width:%f height:%f eyeX:%f, eyeY:%f}",
-            this->x, this->y, this->width, this->height, this->eyeX, this->eyeY];
+    char str[256];
+    sprintf(str, "EyeViewport {x:%f y:%f width:%f height:%f eyeX:%f, eyeY:%f}", this->x, this->y, this->width, this->height, this->eyeX, this->eyeY);
+    return std::string(str);
 }

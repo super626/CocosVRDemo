@@ -39,7 +39,7 @@ THE SOFTWARE.
 #include "platform/CCGL.h"
 #include "platform/CCGLView.h"
 
-class CardboardVRRender;
+class CocosVRRender;
 
 NS_CC_BEGIN
 
@@ -357,7 +357,7 @@ public:
      */
     void drawScene();
         
-    void drawVRScene(float eyeview[16]);
+    void drawVRScene(const Mat4& eyeview);
 
     // Memory Helper
 
@@ -502,7 +502,7 @@ public:
      */
     const std::thread::id& getCocos2dThreadId() const { return _cocos2d_thread_id; }
     
-    CardboardVRRender* getVRRender() const { return _cardboardRender; }
+    CocosVRRender* getVRRender() const { return _cardboardRender; }
     
     void setVRModeEnabled(bool isVRMode);
     
@@ -629,7 +629,7 @@ protected:
     /* cocos2d thread id */
     std::thread::id _cocos2d_thread_id;
     
-    CardboardVRRender* _cardboardRender;
+    CocosVRRender* _cardboardRender;
 
     // GLView will recreate stats labels to fit visible rect
     friend class GLView;

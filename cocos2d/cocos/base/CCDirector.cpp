@@ -61,7 +61,7 @@ THE SOFTWARE.
 #include "base/CCConfiguration.h"
 #include "base/CCAsyncTaskPool.h"
 #include "platform/CCApplication.h"
-#include "platform/ios/CardboardSDK/CardboardVRRender.h"
+#include "platform/ios/CardboardSDK/CocosVRRender.h"
 
 #if CC_ENABLE_SCRIPT_BINDING
 #include "CCScriptSupport.h"
@@ -172,7 +172,7 @@ bool Director::init(void)
     _renderer = new (std::nothrow) Renderer;
     RenderState::initialize();
     
-    _cardboardRender = new CardboardVRRender();
+    _cardboardRender = new CocosVRRender();
 
     return true;
 }
@@ -260,10 +260,9 @@ void Director::setGLDefaultValues()
     setProjection(_projection);
 }
 
-void Director::drawVRScene(float eyeview[16])
+void Director::drawVRScene(const Mat4& eyeview)
 {
     Mat4 mat(eyeview);
-//    mat.inverse();
     mat.transpose();
     mat.m[12] = mat.m[3]; mat.m[3] = 0;
     mat.m[13] = mat.m[7]; mat.m[7] = 0;

@@ -10,40 +10,40 @@
 
 HeadTransform::HeadTransform()
 {
-    this->headView = GLKMatrix4Identity;
+    this->headView = cocos2d::Mat4::IDENTITY;
 }
 
-void HeadTransform::setHeadView(GLKMatrix4 headview)
+void HeadTransform::setHeadView(const cocos2d::Mat4& headview)
 {
     this->headView = headview;
 }
 
-GLKMatrix4 HeadTransform::getHeadView()
+const cocos2d::Mat4& HeadTransform::getHeadView() const
 {
     return this->headView;
 }
 
-GLKVector3 HeadTransform::getTranslation()
+cocos2d::Vec3 HeadTransform::getTranslation()
 {
-    return GLKVector3Make(this->headView.m[12], this->headView.m[13], this->headView.m[14]);
+    return cocos2d::Vec3(this->headView.m[12], this->headView.m[13], this->headView.m[14]);
 }
 
-GLKVector3 HeadTransform::getForwardVector()
+cocos2d::Vec3 HeadTransform::getForwardVector()
 {
-    return GLKVector3Make(-this->headView.m[8], -this->headView.m[9], -this->headView.m[10]);
+    return cocos2d::Vec3(-this->headView.m[8], -this->headView.m[9], -this->headView.m[10]);
 }
 
-GLKVector3 HeadTransform::getUpVector()
+cocos2d::Vec3 HeadTransform::getUpVector()
 {
-    return GLKVector3Make(this->headView.m[4], this->headView.m[5], this->headView.m[6]);
+    return cocos2d::Vec3(this->headView.m[4], this->headView.m[5], this->headView.m[6]);
 }
 
-GLKVector3 HeadTransform::getRightVector()
+cocos2d::Vec3 HeadTransform::getRightVector()
 {
-    return GLKVector3Make(this->headView.m[0], this->headView.m[1], this->headView.m[2]);
+    return cocos2d::Vec3(this->headView.m[0], this->headView.m[1], this->headView.m[2]);
 }
 
-GLKQuaternion HeadTransform::getQuaternion()
+cocos2d::Quaternion HeadTransform::getQuaternion()
 {
     float t = this->headView.m[0] + this->headView.m[5] + this->headView.m[10];
     float s, w, x, y, z;
@@ -80,10 +80,10 @@ GLKQuaternion HeadTransform::getQuaternion()
             }
         }
     }
-    return GLKQuaternionMake(x, y, z, w);
+    return cocos2d::Quaternion(x, y, z, w);
 }
 
-GLKVector3 HeadTransform::getEulerAngles()
+cocos2d::Vec3 HeadTransform::getEulerAngles()
 {
     float yaw, roll, pitch = asinf(this->headView.m[6]);
     if (sqrtf(1.0f - this->headView.m[6] * this->headView.m[6]) >= 0.01f) {
@@ -93,5 +93,5 @@ GLKVector3 HeadTransform::getEulerAngles()
         yaw = 0.0f;
         roll = atan2f(this->headView.m[1], this->headView.m[0]);
     }
-    return GLKVector3Make(-pitch, -yaw, -roll);
+    return cocos2d::Vec3(-pitch, -yaw, -roll);
 }

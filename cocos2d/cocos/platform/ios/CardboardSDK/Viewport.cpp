@@ -26,7 +26,9 @@ void Viewport::setGLScissor()
     glScissor(this->x, this->y, this->width, this->height);
 }
 
-NSString* Viewport::toString()
+std::string Viewport::toString()
 {
-    return [NSString stringWithFormat:@"Viewport {x:%d y:%d width:%d height:%d}", this->x, this->y, this->width, this->height];
+    char str[256];
+    sprintf(str, "Viewport {x:%d y:%d width:%d height:%d}", this->x, this->y, this->width, this->height);
+    return std::string(str);
 }

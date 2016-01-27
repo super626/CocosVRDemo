@@ -9,7 +9,7 @@
 #ifndef __CardboardVR_iOS__EyeTransform__
 #define __CardboardVR_iOS__EyeTransform__
 
-#import <GLKit/GLKit.h>
+#include "math/Mat4.h"
 
 class EyeParams;
 
@@ -17,15 +17,15 @@ class EyeTransform
 {
 public:
     EyeTransform(EyeParams *params);
-    GLKMatrix4 getEyeView();
-    void setEyeView(GLKMatrix4 eyeView);
-    GLKMatrix4 getPerspective();
-    void setPerspective(GLKMatrix4 perspective);
+    const cocos2d::Mat4& getEyeView() const;
+    void setEyeView(const cocos2d::Mat4& eyeView);
+    const cocos2d::Mat4& getPerspective() const;
+    void setPerspective(const cocos2d::Mat4& perspective);
     EyeParams* getParams();
 private:
     EyeParams *eyeParams;
-    GLKMatrix4 eyeView;
-    GLKMatrix4 perspective;
+    cocos2d::Mat4 eyeView;
+    cocos2d::Mat4 perspective;
 };
 
 #endif 

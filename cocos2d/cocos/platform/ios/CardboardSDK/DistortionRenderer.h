@@ -9,7 +9,7 @@
 #ifndef __CardboardVR_iOS__DistortionRenderer__
 #define __CardboardVR_iOS__DistortionRenderer__
 
-#import <GLKit/GLKit.h>
+#include <string>
 #include "HeadMountedDisplay.h"
 #include "EyeParams.h"
 #include "Distortion.h"
@@ -66,7 +66,7 @@ private:
         float eyeX;
         float eyeY;
     public:
-        NSString* toString();
+        std::string toString();
     };
     
     class ProgramHolder
@@ -112,7 +112,7 @@ private:
     int createProgram(const GLchar *vertexSource,
                       const GLchar *fragmentSource);
     ProgramHolder* createProgramHolder();
-    void checkGlError(NSString* op);
+    void checkGlError(const std::string& op);
     static float clamp(float val, float min, float max);
     
 };

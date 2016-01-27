@@ -17,15 +17,15 @@ Distortion::Distortion()
 
 Distortion::Distortion(Distortion *other)
 {
-    DistortionCoeffients coefficients = other->getCoefficients();
-    this->coefficients.c[0] = coefficients.c[0];
-    this->coefficients.c[1] = coefficients.c[1];
+    DistortionCoeffients coef = other->getCoefficients();
+    this->coefficients.c[0] = coef.c[0];
+    this->coefficients.c[1] = coef.c[1];
 }
 
-void Distortion::setCoefficients(DistortionCoeffients coefficients)
+void Distortion::setCoefficients(DistortionCoeffients coef)
 {
-    this->coefficients.c[0] = coefficients.c[0];
-    this->coefficients.c[1] = coefficients.c[1];
+    this->coefficients.c[0] = coef.c[0];
+    this->coefficients.c[1] = coef.c[1];
 }
 
 DistortionCoeffients Distortion::getCoefficients()
@@ -71,7 +71,9 @@ bool Distortion::equals(Distortion *other)
     return (this->coefficients.c[0] == other->getCoefficients().c[0]) && (this->coefficients.c[1] == other->getCoefficients().c[1]);
 }
 
-NSString* Distortion::toString()
+std::string Distortion::toString()
 {
-    return [NSString stringWithFormat:@"Distortion {%f, %f}", this->coefficients.c[0], this->coefficients.c[1]];
+    char str[50];
+    sprintf(str, "Distortion {%f, %f}", this->coefficients.c[0], this->coefficients.c[1]);
+    return std::string(str);
 }

@@ -9,22 +9,22 @@
 #ifndef __CardboardVR_iOS__HeadTransform__
 #define __CardboardVR_iOS__HeadTransform__
 
-#import <GLKit/GLKit.h>
+#include "math/CCMath.h"
 
 class HeadTransform
 {
 public:
     HeadTransform();
-    void setHeadView(GLKMatrix4 headView);
-    GLKMatrix4 getHeadView();
-    GLKVector3 getTranslation();
-    GLKVector3 getForwardVector();
-    GLKVector3 getUpVector();
-    GLKVector3 getRightVector();
-    GLKQuaternion getQuaternion();
-    GLKVector3 getEulerAngles();
+    void setHeadView(const cocos2d::Mat4& headView);
+    const cocos2d::Mat4& getHeadView() const;
+    cocos2d::Vec3 getTranslation();
+    cocos2d::Vec3 getForwardVector();
+    cocos2d::Vec3 getUpVector();
+    cocos2d::Vec3 getRightVector();
+    cocos2d::Quaternion getQuaternion();
+    cocos2d::Vec3 getEulerAngles();
 private:
-    GLKMatrix4 headView;
+    cocos2d::Mat4 headView;
 };
 
 #endif 

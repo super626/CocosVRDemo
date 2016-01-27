@@ -11,12 +11,13 @@ class EyeParams;
 class DistortionRenderer;
 class FieldOfView;
 class VRRenderer;
+class HeadSensorWrapper;
 
-class CardboardVRRender
+class CocosVRRender
 {
 public:
-    CardboardVRRender();
-    ~CardboardVRRender();
+    CocosVRRender();
+    ~CocosVRRender();
     
     void startHeadTracking();
     
@@ -34,8 +35,7 @@ protected:
     
     void updateFovs(FieldOfView* left, FieldOfView* right);
     
-    MagnetSensor *magnetSensor;
-    HeadTracker *headTracker;
+    HeadSensorWrapper* headSensor;
     HeadTransform *headTransform;
     HeadMountedDisplay *headMountedDisplay;
     

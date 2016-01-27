@@ -10,9 +10,9 @@
 
 CardboardDeviceParams::CardboardDeviceParams()
 {
-    this->vendor = @"com.google";
-    this->model = @"cardboard";
-    this->version = @"1.0";
+    this->vendor = "com.google";
+    this->model = "cardboard";
+    this->version = "1.0";
     
     this->interpupillaryDistance = 0.06F;
     this->verticalDistanceToLensCenter = 0.035F;
@@ -49,39 +49,39 @@ CardboardDeviceParams::~CardboardDeviceParams()
     delete this->distortion;
 }
 
-void CardboardDeviceParams::setVendor(NSString* vendor)
+void CardboardDeviceParams::setVendor(const std::string& vendor_)
 {
-    this->vendor = vendor;
+    this->vendor = vendor_;
 }
 
-NSString* CardboardDeviceParams::getVendor()
+const std::string& CardboardDeviceParams::getVendor() const
 {
     return this->vendor;
 }
 
-void CardboardDeviceParams::setModel(NSString* model)
+void CardboardDeviceParams::setModel(const std::string& model_)
 {
-    this->model = model;
+    this->model = model_;
 }
 
-NSString* CardboardDeviceParams::getModel()
+const std::string& CardboardDeviceParams::getModel() const
 {
     return this->model;
 }
 
-void CardboardDeviceParams::setVersion(NSString* version)
+void CardboardDeviceParams::setVersion(const std::string& version_)
 {
-    this->version = version;
+    this->version = version_;
 }
 
-NSString* CardboardDeviceParams::getVersion()
+const std::string& CardboardDeviceParams::getVersion() const
 {
     return this->version;
 }
 
-void CardboardDeviceParams::setInterpupillaryDistance(float interpupillaryDistance)
+void CardboardDeviceParams::setInterpupillaryDistance(float interpupillaryDistance_)
 {
-    this->interpupillaryDistance = interpupillaryDistance;
+    this->interpupillaryDistance = interpupillaryDistance_;
 }
 
 float CardboardDeviceParams::getInterpupillaryDistance()
@@ -89,9 +89,9 @@ float CardboardDeviceParams::getInterpupillaryDistance()
     return this->interpupillaryDistance;
 }
 
-void CardboardDeviceParams::setVerticalDistanceToLensCenter(float verticalDistanceToLensCenter)
+void CardboardDeviceParams::setVerticalDistanceToLensCenter(float verticalDistanceToLensCenter_)
 {
-    this->verticalDistanceToLensCenter = verticalDistanceToLensCenter;
+    this->verticalDistanceToLensCenter = verticalDistanceToLensCenter_;
 }
 
 float CardboardDeviceParams::getVerticalDistanceToLensCenter()
@@ -99,9 +99,9 @@ float CardboardDeviceParams::getVerticalDistanceToLensCenter()
     return this->verticalDistanceToLensCenter;
 }
 
-void CardboardDeviceParams::setVisibleViewportSize(float visibleViewportSize)
+void CardboardDeviceParams::setVisibleViewportSize(float visibleViewportSize_)
 {
-    this->visibleViewportSize = visibleViewportSize;
+    this->visibleViewportSize = visibleViewportSize_;
 }
 
 float CardboardDeviceParams::getVisibleViewportSize()
@@ -109,9 +109,9 @@ float CardboardDeviceParams::getVisibleViewportSize()
     return this->visibleViewportSize;
 }
 
-void CardboardDeviceParams::setFovY(float fovY)
+void CardboardDeviceParams::setFovY(float fovY_)
 {
-    this->fovY = fovY;
+    this->fovY = fovY_;
 }
 
 float CardboardDeviceParams::getFovY()
@@ -119,9 +119,9 @@ float CardboardDeviceParams::getFovY()
     return this->fovY;
 }
 
-void CardboardDeviceParams::setLensDiameter(float lensDiameter)
+void CardboardDeviceParams::setLensDiameter(float lensDiameter_)
 {
-    this->lensDiameter = lensDiameter;
+    this->lensDiameter = lensDiameter_;
 }
 
 float CardboardDeviceParams::getLensDiameter()
@@ -129,9 +129,9 @@ float CardboardDeviceParams::getLensDiameter()
     return this->lensDiameter;
 }
 
-void CardboardDeviceParams::setScreenToLensDistance(float screenToLensDistance)
+void CardboardDeviceParams::setScreenToLensDistance(float screenToLensDistance_)
 {
-    this->screenToLensDistance = screenToLensDistance;
+    this->screenToLensDistance = screenToLensDistance_;
 }
 
 float CardboardDeviceParams::getScreenToLensDistance()
@@ -139,9 +139,9 @@ float CardboardDeviceParams::getScreenToLensDistance()
     return this->screenToLensDistance;
 }
 
-void CardboardDeviceParams::setEyeToLensDistance(float eyeToLensDistance)
+void CardboardDeviceParams::setEyeToLensDistance(float eyeToLensDistance_)
 {
-    this->eyeToLensDistance = eyeToLensDistance;
+    this->eyeToLensDistance = eyeToLensDistance_;
 }
 
 float CardboardDeviceParams::getEyeToLensDistance()

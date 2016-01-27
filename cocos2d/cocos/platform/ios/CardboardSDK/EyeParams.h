@@ -9,7 +9,6 @@
 #ifndef __CardboardVR_iOS__EyeParams__
 #define __CardboardVR_iOS__EyeParams__
 
-#import <UIKit/UIKit.h>
 #include "Viewport.h"
 #include "FieldOfView.h"
 #include "EyeTransform.h"

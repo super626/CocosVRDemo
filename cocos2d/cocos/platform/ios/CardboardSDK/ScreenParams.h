@@ -9,12 +9,10 @@
 #ifndef __CardboardVR_iOS__ScreenParams__
 #define __CardboardVR_iOS__ScreenParams__
 
-#import <UIKit/UIKit.h>
-
 class ScreenParams
 {
 public:
-    ScreenParams(UIScreen *screen);
+    ScreenParams();
     ScreenParams(ScreenParams *screenParams);
     void setWidth(int width);
     int getWidth();
@@ -26,14 +24,11 @@ public:
     float getBorderSizeMeters();
     bool equals(ScreenParams *other);
 private:
-    CGFloat scale;
     int width;
     int height;
     float xMetersPerPixel;
     float yMetersPerPixel;
     float borderSizeMeters;
-private:
-    float pixelsPerInch(UIScreen* screen);
 };
 
 

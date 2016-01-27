@@ -69,7 +69,7 @@ float FieldOfView::getTop()
     return this->top;
 }
 
-GLKMatrix4 FieldOfView::toPerspectiveMatrix(float near, float far)
+cocos2d::Mat4 FieldOfView::toPerspectiveMatrix(float near, float far)
 {
     float left = -tanf(this->left * (M_PI / 180.0f)) * near;
     float right = tanf(this->right * (M_PI / 180.0f)) * near;
@@ -89,12 +89,14 @@ bool FieldOfView::equals(FieldOfView *other)
     return (this->getLeft() == other->getLeft()) && (this->getRight() == other->getRight()) && (this->getBottom() == other->getBottom()) && (this->getTop() == other->getTop());
 }
 
-NSString* FieldOfView::toString()
+std::string FieldOfView::toString()
 {
-    return [NSString stringWithFormat:@"FieldOfView {left:%f right:%f bottom:%f top:%f}", this->left, this->right, this->bottom, this->top];
+    char str[256];
+    sprintf(str, "FieldOfView {left:%f right:%f bottom:%f top:%f}", this->left, this->right, this->bottom, this->top);
+    return std::string(str);
 }
 
-GLKMatrix4 FieldOfView::frustumM(float left, float right, float bottom, float top, float near, float far)
+cocos2d::Mat4 FieldOfView::frustumM(float left, float right, float bottom, float top, float near, float far)
 {
     float r_width  = 1.0f / (right - left);
     float r_height = 1.0f / (top - bottom);
@@ -105,7 +107,7 @@ GLKMatrix4 FieldOfView::frustumM(float left, float right, float bottom, float to
     float B = (top + bottom) * r_height;
     float C = (far + near) * r_depth;
     float D = 2.0f * (far * near * r_depth);
-    GLKMatrix4 frustum;
+    cocos2d::Mat4 frustum;
     frustum.m[0] = x;
     frustum.m[1] = 0.0f;
     frustum.m[2] = 0.0f;

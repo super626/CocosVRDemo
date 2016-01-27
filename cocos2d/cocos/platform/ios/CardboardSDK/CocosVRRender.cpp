@@ -6,25 +6,36 @@
 //  Copyright (c) 2014 Peter Tribe. All rights reserved.
 //
 
-#import "CardboardVRRender.h"
+#include "CocosVRRender.h"
 
+#include <algorithm>
 #include "CardboardDeviceParams.h"
 #include "DistortionRenderer.h"
 #include "EyeParams.h"
-#include "HeadTracker.h"
+
 #include "HeadTransform.h"
 #include "HeadMountedDisplay.h"
-#include "MagnetSensor.h"
+#include "HeadSensorWrapper.h"
+
 #include "Viewport.h"
 
 #include "base/CCDirector.h"
+#include "base/ccMacros.h"
 #include "renderer/CCFrameBuffer.h"
 #include "renderer/ccGLStateCache.h"
 
-#import "DebugUtils.h"
-#import "GLHelpers.h"
+#ifdef DEBUG
 
-#import <OpenGLES/ES2/glext.h>
+inline void checkGLError()
+{
+    CHECK_GL_ERROR_DEBUG();
+}
+
+#else
+
+#define checkGLError() ;
+
+#endif
 
 class VRRenderer
 {
@@ -55,7 +66,7 @@ public:
 //                                                  eyeType:leftEyeParams->getEye()];
         
     
-        director->drawVRScene(leftEyeParams->getTransform()->getEyeView().m);
+        director->drawVRScene(leftEyeParams->getTransform()->getEyeView());
         checkGLError();
     
         if (rightEyeParams == nullptr) { return; }
@@ -67,7 +78,7 @@ public:
     
 //        [self.stereoRendererDelegate drawEyeWithTransform:rightEyeParams->getTransform()
 //                                                  eyeType:rightEyeParams->getEye()];
-        director->drawVRScene(rightEyeParams->getTransform()->getEyeView().m);
+        director->drawVRScene(rightEyeParams->getTransform()->getEyeView());
     
         checkGLError();
     }
@@ -85,12 +96,11 @@ public:
     }
 };
 
-CardboardVRRender::CardboardVRRender()
+CocosVRRender::CocosVRRender()
 {
-    magnetSensor = new MagnetSensor();
-    headTracker = new HeadTracker();
+    headSensor = new HeadSensorWrapper();
     headTransform = new HeadTransform();
-    headMountedDisplay = new HeadMountedDisplay([UIScreen mainScreen]);
+    headMountedDisplay = nullptr;//
     
     monocularParams = new EyeParams(EyeParamsTypeMonocular);
     leftEyeParams = new EyeParams(EyeParamsTypeLeft);
@@ -113,10 +123,9 @@ CardboardVRRender::CardboardVRRender()
     startHeadTracking();
 }
 
-CardboardVRRender::~CardboardVRRender()
+CocosVRRender::~CocosVRRender()
 {
-    delete magnetSensor;
-    delete headTracker;
+    delete headSensor;
     delete headTransform;
     delete headMountedDisplay;
     
@@ -128,19 +137,17 @@ CardboardVRRender::~CardboardVRRender()
     delete renderer;
 }
 
-void CardboardVRRender::startHeadTracking()
+void CocosVRRender::startHeadTracking()
 {
-    headTracker->startTracking();
-    magnetSensor->start();
+    headSensor->startTracking();
 }
 
-void CardboardVRRender::stopHeadTracking()
+void CocosVRRender::stopHeadTracking()
 {
-    headTracker->stopTracking();
-    magnetSensor->stop();
+    headSensor->stopTracking();
 }
 
-void CardboardVRRender::setVRModeEnable(bool isEnable)
+void CocosVRRender::setVRModeEnable(bool isEnable)
 {
     if (isVRModeEnabled != isEnable)
     {
@@ -149,37 +156,39 @@ void CardboardVRRender::setVRModeEnable(bool isEnable)
     }
 }
 
-const float* CardboardVRRender::getHeadEuler()
+const float* CocosVRRender::getHeadEuler()
 {
-    GLKVector3 dir = headTransform->getEulerAngles();
-    headEuler[0] = dir.v[0];
-    headEuler[1] = dir.v[1];
-    headEuler[2] = dir.v[2];
+    auto dir = headTransform->getEulerAngles();
+    headEuler[0] = dir.x;
+    headEuler[1] = dir.y;
+    headEuler[2] = dir.z;
     return headEuler;
 }
 
-void CardboardVRRender::render()
+void CocosVRRender::render()
 {
+    if (headMountedDisplay == nullptr)
+        headMountedDisplay = new HeadMountedDisplay();
     
     CardboardDeviceParams *cardboardDeviceParams = headMountedDisplay->getCardboard();
     
-    headTransform->setHeadView(headTracker->getLastHeadView());
+    headTransform->setHeadView(headSensor->getLastHeadView());
     float halfInterpupillaryDistance = cardboardDeviceParams->getInterpupillaryDistance() * 0.5f;
     
     // NSLog(@"%@", NSStringFromGLKMatrix4(_headTracker->getLastHeadView()));
     
     if (isVRModeEnabled)
     {
-        GLKMatrix4 leftEyeTranslate = GLKMatrix4Identity;
-        GLKMatrix4 rightEyeTranslate = GLKMatrix4Identity;
+        cocos2d::Mat4 leftEyeTranslate;
+        cocos2d::Mat4 rightEyeTranslate;
         
-        leftEyeTranslate = GLKMatrix4Translate(leftEyeTranslate, halfInterpupillaryDistance, 0, 0);
-        rightEyeTranslate = GLKMatrix4Translate(rightEyeTranslate, -halfInterpupillaryDistance, 0, 0);
+        cocos2d::Mat4::createTranslation(cocos2d::Vec3(-halfInterpupillaryDistance, 0, 0), &leftEyeTranslate);//to do
+        cocos2d::Mat4::createTranslation(cocos2d::Vec3(halfInterpupillaryDistance, 0, 0), &rightEyeTranslate);
         
         // NSLog(@"%@", NSStringFromGLKMatrix4(_headTransform->getHeadView()));
         
-        leftEyeParams->getTransform()->setEyeView( GLKMatrix4Multiply(leftEyeTranslate, headTransform->getHeadView()));
-        rightEyeParams->getTransform()->setEyeView( GLKMatrix4Multiply(rightEyeTranslate, headTransform->getHeadView()));
+        leftEyeParams->getTransform()->setEyeView( leftEyeTranslate * headTransform->getHeadView());
+        rightEyeParams->getTransform()->setEyeView( rightEyeTranslate * headTransform->getHeadView());
         
     }
     else
@@ -196,11 +205,9 @@ void CardboardVRRender::render()
         if (!isVRModeEnabled)
         {
             float aspectRatio = screenParams->getWidth() / screenParams->getHeight();
-            monocularParams->getTransform()->setPerspective(
-                                                             GLKMatrix4MakePerspective(GLKMathDegreesToRadians(headMountedDisplay->getCardboard()->getFovY()),
-                                                                                       aspectRatio,
-                                                                                       zNear,
-                                                                                       zFar));
+            cocos2d::Mat4 perspectMat;
+            cocos2d::Mat4::createPerspective(CC_DEGREES_TO_RADIANS(headMountedDisplay->getCardboard()->getFovY()), aspectRatio, zNear, zFar, &perspectMat);
+            monocularParams->getTransform()->setPerspective(perspectMat);
         }
         else if (distortionCorrectionEnabled)
         {
@@ -210,7 +217,7 @@ void CardboardVRRender::render()
         }
         else
         {
-            float eyeToScreenDistance = cardboardDeviceParams->getVisibleViewportSize() / 2.0f / tanf(GLKMathDegreesToRadians(cardboardDeviceParams->getFovY()) / 2.0f );
+            float eyeToScreenDistance = cardboardDeviceParams->getVisibleViewportSize() / 2.0f / tanf(CC_RADIANS_TO_DEGREES(cardboardDeviceParams->getFovY()) / 2.0f );
             
             float left = screenParams->getWidthMeters() / 2.0f - halfInterpupillaryDistance;
             float right = halfInterpupillaryDistance;
@@ -218,10 +225,10 @@ void CardboardVRRender::render()
             float top = screenParams->getBorderSizeMeters() + screenParams->getHeightMeters() - cardboardDeviceParams->getVerticalDistanceToLensCenter();
             
             FieldOfView *leftEyeFov = leftEyeParams->getFov();
-            leftEyeFov->setLeft(GLKMathRadiansToDegrees(atan2f(left, eyeToScreenDistance)));
-            leftEyeFov->setRight(GLKMathRadiansToDegrees(atan2f(right, eyeToScreenDistance)));
-            leftEyeFov->setBottom(GLKMathRadiansToDegrees(atan2f(bottom, eyeToScreenDistance)));
-            leftEyeFov->setTop(GLKMathRadiansToDegrees(atan2f(top, eyeToScreenDistance)));
+            leftEyeFov->setLeft(CC_RADIANS_TO_DEGREES(atan2f(left, eyeToScreenDistance)));
+            leftEyeFov->setRight(CC_RADIANS_TO_DEGREES(atan2f(right, eyeToScreenDistance)));
+            leftEyeFov->setBottom(CC_RADIANS_TO_DEGREES(atan2f(bottom, eyeToScreenDistance)));
+            leftEyeFov->setTop(CC_RADIANS_TO_DEGREES(atan2f(top, eyeToScreenDistance)));
             
             FieldOfView *rightEyeFov = rightEyeParams->getFov();
             rightEyeFov->setLeft(leftEyeFov->getRight());
@@ -303,13 +310,13 @@ void CardboardVRRender::render()
     checkGLError();
 }
 
-void CardboardVRRender::updateFovs(FieldOfView* leftEyeFov, FieldOfView* rightEyeFov)
+void CocosVRRender::updateFovs(FieldOfView* leftEyeFov, FieldOfView* rightEyeFov)
 {
     CardboardDeviceParams *cardboardDeviceParams = headMountedDisplay->getCardboard();
     ScreenParams *screenParams = headMountedDisplay->getScreen();
     Distortion *distortion = cardboardDeviceParams->getDistortion();
     
-    float idealFovAngle = GLKMathRadiansToDegrees(atan2f(cardboardDeviceParams->getLensDiameter() / 2.0f,
+    float idealFovAngle = CC_RADIANS_TO_DEGREES(atan2f(cardboardDeviceParams->getLensDiameter() / 2.0f,
                                                          cardboardDeviceParams->getEyeToLensDistance()));
     float eyeToScreenDistance = cardboardDeviceParams->getEyeToLensDistance() + cardboardDeviceParams->getScreenToLensDistance();
     float outerDistance = ( screenParams->getWidthMeters() - cardboardDeviceParams->getInterpupillaryDistance() ) / 2.0f;
@@ -317,18 +324,18 @@ void CardboardVRRender::updateFovs(FieldOfView* leftEyeFov, FieldOfView* rightEy
     float bottomDistance = cardboardDeviceParams->getVerticalDistanceToLensCenter() - screenParams->getBorderSizeMeters();
     float topDistance = screenParams->getHeightMeters() + screenParams->getBorderSizeMeters() - cardboardDeviceParams->getVerticalDistanceToLensCenter();
     
-    float outerAngle = GLKMathRadiansToDegrees(atan2f(distortion->distort(outerDistance), eyeToScreenDistance));
-    float innerAngle = GLKMathRadiansToDegrees(atan2f(distortion->distort(innerDistance), eyeToScreenDistance));
-    float bottomAngle = GLKMathRadiansToDegrees(atan2f(distortion->distort(bottomDistance), eyeToScreenDistance));
-    float topAngle = GLKMathRadiansToDegrees(atan2f(distortion->distort(topDistance), eyeToScreenDistance));
+    float outerAngle = CC_RADIANS_TO_DEGREES(atan2f(distortion->distort(outerDistance), eyeToScreenDistance));
+    float innerAngle = CC_RADIANS_TO_DEGREES(atan2f(distortion->distort(innerDistance), eyeToScreenDistance));
+    float bottomAngle = CC_RADIANS_TO_DEGREES(atan2f(distortion->distort(bottomDistance), eyeToScreenDistance));
+    float topAngle = CC_RADIANS_TO_DEGREES(atan2f(distortion->distort(topDistance), eyeToScreenDistance));
     
-    leftEyeFov->setLeft(MIN(outerAngle, idealFovAngle));
-    leftEyeFov->setRight(MIN(innerAngle, idealFovAngle));
-    leftEyeFov->setBottom(MIN(bottomAngle, idealFovAngle));
-    leftEyeFov->setTop(MIN(topAngle, idealFovAngle));
+    leftEyeFov->setLeft(std::min(outerAngle, idealFovAngle));
+    leftEyeFov->setRight(std::min(innerAngle, idealFovAngle));
+    leftEyeFov->setBottom(std::min(bottomAngle, idealFovAngle));
+    leftEyeFov->setTop(std::min(topAngle, idealFovAngle));
     
-    rightEyeFov->setLeft(MIN(innerAngle, idealFovAngle));
-    rightEyeFov->setRight(MIN(outerAngle, idealFovAngle));
-    rightEyeFov->setBottom(MIN(bottomAngle, idealFovAngle));
-    rightEyeFov->setTop(MIN(topAngle, idealFovAngle));
+    rightEyeFov->setLeft(std::min(innerAngle, idealFovAngle));
+    rightEyeFov->setRight(std::min(outerAngle, idealFovAngle));
+    rightEyeFov->setBottom(std::min(bottomAngle, idealFovAngle));
+    rightEyeFov->setTop(std::min(topAngle, idealFovAngle));
 }

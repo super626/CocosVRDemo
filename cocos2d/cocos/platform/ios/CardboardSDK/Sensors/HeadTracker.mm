@@ -26,7 +26,7 @@ HeadTracker::~HeadTracker()
     // delete this->tracker;
 }
 
-GLKMatrix4 HeadTracker::getRotateEulerMatrix(float x, float y, float z)
+cocos2d::Mat4 HeadTracker::getRotateEulerMatrix(float x, float y, float z)
 {
     x *= (float)(M_PI / 180.0f);
     y *= (float)(M_PI / 180.0f);
@@ -39,7 +39,7 @@ GLKMatrix4 HeadTracker::getRotateEulerMatrix(float x, float y, float z)
     float sz = (float) sin(z);
     float cxsy = cx * sy;
     float sxsy = sx * sy;
-    GLKMatrix4 matrix;
+    cocos2d::Mat4 matrix;
     matrix.m[0] = cy * cz;
     matrix.m[1] = -cy * sz;
     matrix.m[2] = sy;
@@ -74,9 +74,9 @@ void HeadTracker::stopTracking()
     [this->manager stopDeviceMotionUpdates];
 }
 
-GLKMatrix4 HeadTracker::glMatrixFromRotationMatrix(CMRotationMatrix rotationMatrix)
+cocos2d::Mat4 HeadTracker::glMatrixFromRotationMatrix(CMRotationMatrix rotationMatrix)
 {
-    GLKMatrix4 glRotationMatrix;
+    cocos2d::Mat4 glRotationMatrix;
     
     glRotationMatrix.m[0] = rotationMatrix.m11;
     glRotationMatrix.m[1] = rotationMatrix.m12;
@@ -101,7 +101,7 @@ GLKMatrix4 HeadTracker::glMatrixFromRotationMatrix(CMRotationMatrix rotationMatr
     return glRotationMatrix;
 }
 
-GLKMatrix4 HeadTracker::getLastHeadView()
+cocos2d::Mat4 HeadTracker::getLastHeadView()
 {
 //    if (this->referenceTimestamp == 0)
 //    {
@@ -117,9 +117,23 @@ GLKMatrix4 HeadTracker::getLastHeadView()
     // NSLog(@"%.3f %.3f %.3f", motion.attitude.roll, motion.attitude.pitch, motion.attitude.yaw);
     
     CMRotationMatrix rotationMatrix = motion.attitude.rotationMatrix;
-    GLKMatrix4 inertialReferenceFrameToDevice = GLKMatrix4Transpose(this->glMatrixFromRotationMatrix(rotationMatrix)); // note the matrix inversion
-    GLKMatrix4 worldToDevice = GLKMatrix4Multiply(inertialReferenceFrameToDevice, worldToInertialReferenceFrame);
-    GLKMatrix4 worldToDisplay = GLKMatrix4Multiply(deviceToDisplay, worldToDevice);
+    cocos2d::Mat4 inertialReferenceFrameToDevice;
+    inertialReferenceFrameToDevice.m[0] = rotationMatrix.m11;
+    inertialReferenceFrameToDevice.m[1] = rotationMatrix.m21;
+    inertialReferenceFrameToDevice.m[2] = rotationMatrix.m31;
+    
+    inertialReferenceFrameToDevice.m[4] = rotationMatrix.m12;
+    inertialReferenceFrameToDevice.m[5] = rotationMatrix.m22;
+    inertialReferenceFrameToDevice.m[6] = rotationMatrix.m32;
+    
+    inertialReferenceFrameToDevice.m[8] = rotationMatrix.m13;
+    inertialReferenceFrameToDevice.m[9] = rotationMatrix.m23;
+    inertialReferenceFrameToDevice.m[10] = rotationMatrix.m33;
+    
+    cocos2d::Mat4 worldToDevice;
+    cocos2d::Mat4::multiply(inertialReferenceFrameToDevice, worldToInertialReferenceFrame, &worldToDevice);
+    
+    cocos2d::Mat4 worldToDisplay = (deviceToDisplay * worldToDevice);
     // GLKMatrix4 outMatrix = GLKMatrix4Multiply(glRotationMatrix, this->ekfToHeadTracker);
     // NSLog(@"%@", NSStringFromGLKMatrix4(outMatrix));
     return worldToDisplay;

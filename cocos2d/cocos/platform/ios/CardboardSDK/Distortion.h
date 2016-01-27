@@ -9,7 +9,7 @@
 #ifndef __CardboardVR_iOS__Distortion__
 #define __CardboardVR_iOS__Distortion__
 
-#import <UIKit/UIKit.h>
+#include <string>
 #include "Structs.h"
 
 class Distortion
@@ -23,7 +23,7 @@ public:
     float distort(float radius);
     float distortInverse(float radius);
     bool equals(Distortion *other);
-    NSString* toString();
+    std::string toString();
 private:
     DistortionCoeffients coefficients;
 };

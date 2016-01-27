@@ -9,8 +9,8 @@
 #ifndef __CardboardVR_iOS__Viewport__
 #define __CardboardVR_iOS__Viewport__
 
-#import <UIKit/UIKit.h>
-#import <GLKit/GLKit.h>
+
+#include <string>
 //#include "Structs.h"
 
 class Viewport
@@ -24,7 +24,7 @@ public:
     void setViewport(int x, int y, int width, int height);
     void setGLViewport();
     void setGLScissor();
-    NSString* toString();
+    std::string toString();
 };
 
 #endif 

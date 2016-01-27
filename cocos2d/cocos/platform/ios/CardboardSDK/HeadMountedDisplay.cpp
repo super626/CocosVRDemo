@@ -8,9 +8,9 @@
 
 #include "HeadMountedDisplay.h"
 
-HeadMountedDisplay::HeadMountedDisplay(UIScreen *screen)
+HeadMountedDisplay::HeadMountedDisplay()
 {
-    this->screen = new ScreenParams(screen);
+    this->screen = new ScreenParams();
     this->cardboard = new CardboardDeviceParams();
 }
 

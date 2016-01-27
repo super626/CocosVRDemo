@@ -9,14 +9,13 @@
 #ifndef __CardboardVR_iOS__HeadMountedDisplay__
 #define __CardboardVR_iOS__HeadMountedDisplay__
 
-#import <UIKit/UIKit.h>
-#import "ScreenParams.h"
-#import "CardboardDeviceParams.h"
+#include "ScreenParams.h"
+#include "CardboardDeviceParams.h"
 
 class HeadMountedDisplay
 {
 public:
-    HeadMountedDisplay(UIScreen *screen);
+    HeadMountedDisplay();
     HeadMountedDisplay(HeadMountedDisplay *hmd);
     ~HeadMountedDisplay();
     void setScreen(ScreenParams* screen);

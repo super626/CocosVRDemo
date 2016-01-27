@@ -8,9 +8,9 @@
 
 #include "EyeParams.h"
 
-EyeParams::EyeParams(EyeParamsType eye)
+EyeParams::EyeParams(EyeParamsType eye1)
 {
-    this->eye = eye;
+    this->eye = eye1;
     this->viewport = new Viewport();
     this->fov = new FieldOfView();
     this->eyeTransform = new EyeTransform(this);

@@ -9,8 +9,8 @@
 #ifndef __CardboardVR_iOS__CardboardDeviceParams__
 #define __CardboardVR_iOS__CardboardDeviceParams__
 
-#import <UIKit/UIKit.h>
 #include "Distortion.h"
+#include <string>
 
 class CardboardDeviceParams
 {
@@ -18,12 +18,12 @@ public:
     CardboardDeviceParams();
     CardboardDeviceParams(CardboardDeviceParams* params);
     ~CardboardDeviceParams();
-    void setVendor(NSString* vendor);
-    NSString* getVendor();
-    void setModel(NSString* model);
-    NSString* getModel();
-    void setVersion(NSString* version);
-    NSString* getVersion();
+    void setVendor(const std::string& vendor);
+    const std::string& getVendor() const;
+    void setModel(const std::string& model);
+    const std::string& getModel() const;
+    void setVersion(const std::string& version);
+    const std::string& getVersion() const;
     void setInterpupillaryDistance(float interpupillaryDistance);
     float getInterpupillaryDistance();
     void setVerticalDistanceToLensCenter(float verticalDistanceToLensCenter);
@@ -41,9 +41,9 @@ public:
     Distortion* getDistortion();
     bool equals(CardboardDeviceParams *other);
 private:
-    NSString *vendor;
-    NSString *model;
-    NSString *version;
+    std::string vendor;
+    std::string model;
+    std::string version;
     float interpupillaryDistance;
     float verticalDistanceToLensCenter;
     float lensDiameter;

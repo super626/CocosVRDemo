@@ -16,7 +16,6 @@
 		3E5E0DD61C48E5EB003C6C74 /* Tank.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E0DD31C48E5EB003C6C74 /* Tank.cpp */; };
 		3EACC98F19EE6D4300EB3C5E /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3EACC98E19EE6D4300EB3C5E /* res */; };
 		3EACC99019EE6D4300EB3C5E /* res in Resources */ = {isa = PBXBuildFile; fileRef = 3EACC98E19EE6D4300EB3C5E /* res */; };
-		3ECAE5A71C47C62800AA3E9A /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ECAE5A61C47C62800AA3E9A /* GLKit.framework */; };
 		3ECAE5A91C47C63900AA3E9A /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ECAE5A81C47C63900AA3E9A /* CoreMotion.framework */; };
 		46880B7B19C43A67006E1F66 /* CloseNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 46880B7619C43A67006E1F66 /* CloseNormal.png */; };
 		46880B7C19C43A67006E1F66 /* CloseNormal.png in Resources */ = {isa = PBXBuildFile; fileRef = 46880B7619C43A67006E1F66 /* CloseNormal.png */; };
@@ -116,7 +115,6 @@
 		3E5E0DD31C48E5EB003C6C74 /* Tank.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tank.cpp; sourceTree = "<group>"; };
 		3E5E0DD41C48E5EB003C6C74 /* Tank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tank.h; sourceTree = "<group>"; };
 		3EACC98E19EE6D4300EB3C5E /* res */ = {isa = PBXFileReference; lastKnownFileType = folder; path = res; sourceTree = "<group>"; };
-		3ECAE5A61C47C62800AA3E9A /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/GLKit.framework; sourceTree = DEVELOPER_DIR; };
 		3ECAE5A81C47C63900AA3E9A /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
 		46880B7619C43A67006E1F66 /* CloseNormal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseNormal.png; sourceTree = "<group>"; };
 		46880B7719C43A67006E1F66 /* CloseSelected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CloseSelected.png; sourceTree = "<group>"; };
@@ -182,7 +180,6 @@
 				52B47A471A53D09C004E4C60 /* Security.framework in Frameworks */,
 				1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */,
 				D6B0611B1803AB670077942B /* CoreMotion.framework in Frameworks */,
-				3ECAE5A71C47C62800AA3E9A /* GLKit.framework in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */,
@@ -279,7 +276,6 @@
 				5087E78A17EB975400C73F5D /* OpenGL.framework */,
 				5087E78817EB974C00C73F5D /* AppKit.framework */,
 				1ACB3243164770DE00914215 /* libcurl.a */,
-				3ECAE5A61C47C62800AA3E9A /* GLKit.framework */,
 				BF170DB412928DE900B8313A /* libz.dylib */,
 				D44C620F132DFF4E0009C878 /* AudioToolbox.framework */,
 				D44C620D132DFF430009C878 /* AVFoundation.framework */,
