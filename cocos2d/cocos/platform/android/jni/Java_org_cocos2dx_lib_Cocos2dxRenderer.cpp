@@ -53,4 +53,24 @@ extern "C" {
         std::string pszText = cocos2d::IMEDispatcher::sharedDispatcher()->getContentText();
         return cocos2d::StringUtils::newStringUTFJNI(env, pszText);
     }
+    
+    JNIEXPORT jboolean JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeisVRModeEnabled() {
+        JNIEnv * env = 0;
+        
+        if (JniHelper::getJavaVM()->GetEnv((void**)&env, JNI_VERSION_1_4) != JNI_OK || ! env) {
+            return false;
+        }
+        std::string pszText = cocos2d::IMEDispatcher::sharedDispatcher()->getContentText();
+        return cocos2d::Director::getInstance()->isVRModeEnabled();
+    }
+    
+    JNIEXPORT void JNICALL Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeSetHeadTransform(JNIEnv * env, jobject thiz, jfloatArray transform) {
+        int size = env->GetArrayLength(transform);
+        jfloat data[size];
+        Mat4 matrix(data);
+        //matrix.transpose();
+        //env->GetFloatArrayRegion(transform, 0, size, data);
+        
+        cocos2d::Director::getInstance()->setHeadTransform(matrix);
+    }
 }

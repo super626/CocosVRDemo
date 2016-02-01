@@ -62,6 +62,7 @@ THE SOFTWARE.
 #include "base/CCAsyncTaskPool.h"
 #include "platform/CCApplication.h"
 #include "vr/CocosVRRender.h"
+#include "vr/HeadTransform.h"
 
 #if CC_ENABLE_SCRIPT_BINDING
 #include "CCScriptSupport.h"
@@ -294,6 +295,16 @@ bool Director::isVRModeEnabled() const
         _cardboardRender->isVRModeEnable();
     return false;
 }
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+void Director::setHeadView(const Mat4& headView)
+{
+    if (_cardboardRender)
+    {
+        _cardboardRender->getHeadTransform()->setHeadView(headView);
+    }
+}
+#endif
 
 // Draw the Scene
 void Director::drawScene()

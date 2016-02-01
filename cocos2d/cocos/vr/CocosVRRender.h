@@ -12,6 +12,7 @@ class DistortionRenderer;
 class FieldOfView;
 class VRRenderer;
 class HeadSensorWrapper;
+class HeadTransform;
 
 class CocosVRRender
 {
@@ -30,6 +31,8 @@ public:
     void render();
     
     const float* getHeadEuler();
+    
+    HeadTransform* getHeadTransform() const { return headTransform; }
     
 protected:
     

@@ -61,6 +61,7 @@ class EventListenerCustom;
 class TextureCache;
 class Renderer;
 class Camera;
+class HeadTransform;
 
 
 class Console;
@@ -507,6 +508,10 @@ public:
     void setVRModeEnabled(bool isVRMode);
     
     bool isVRModeEnabled() const;
+    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    void setHeadView(const Mat4& headView);
+#endif
 
 protected:
     void reset();
