@@ -7,6 +7,7 @@
 //
 
 #include "Viewport.h"
+#include "platform/CCGL.h"
 
 void Viewport::setViewport(int x, int y, int width, int height)
 {

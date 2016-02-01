@@ -28,7 +28,6 @@ import android.nfc.Tag;
 import android.nfc.tech.Ndef;
 import android.os.Handler;
 import android.util.Log;
-import com.google.vrtoolkit.cardboard.CardboardDeviceParams;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -135,24 +134,6 @@ public class NfcSensor
 		return mCurrentTag != null;
 	}
 
-	public CardboardDeviceParams getCardboardDeviceParams()
-	{
-		NdefMessage tagContents = null;
-		synchronized (mTagLock) {
-			try {
-				tagContents = mCurrentTag.getCachedNdefMessage();
-			} catch (Exception e) {
-				return null;
-			}
-		}
-
-		if (tagContents == null) {
-			return null;
-		}
-
-		return CardboardDeviceParams.createFromNfcContents(tagContents);
-	}
-
 	public void onResume(Activity activity)
 	{
 		if (!isNfcEnabled()) {
@@ -229,7 +210,7 @@ public class NfcSensor
 			if (!isSameTag) {
 				synchronized (mListeners) {
 					for (ListenerHelper listener : mListeners) {
-						listener.onInsertedIntoCardboard(CardboardDeviceParams.createFromNfcContents(nfcTagContents));
+						
 					}
 
 				}
@@ -296,16 +277,6 @@ public class NfcSensor
 			return mListener;
 		}
 
-		public void onInsertedIntoCardboard(final CardboardDeviceParams deviceParams)
-		{
-			mHandler.post(new Runnable()
-			{
-				public void run() {
-					mListener.onInsertedIntoCardboard(deviceParams);
-				}
-			});
-		}
-
 		public void onRemovedFromCardboard()
 		{
 			mHandler.post(new Runnable()
@@ -320,7 +291,6 @@ public class NfcSensor
 	/** Interface for listeners of Cardboard NFC events. */
 	public static abstract interface OnCardboardNfcListener
 	{
-		public abstract void onInsertedIntoCardboard(CardboardDeviceParams paramCardboardDeviceParams);
 
 		public abstract void onRemovedFromCardboard();
 	}

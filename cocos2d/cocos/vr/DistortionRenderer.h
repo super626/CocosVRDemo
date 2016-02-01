@@ -14,6 +14,7 @@
 #include "EyeParams.h"
 #include "Distortion.h"
 #include "FieldOfView.h"
+#include "platform/CCGL.h"
 
 class DistortionRenderer
 {

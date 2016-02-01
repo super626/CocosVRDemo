@@ -10,7 +10,7 @@
 #define __CardboardVR_iOS__Distortion__
 
 #include <string>
-#include "Structs.h"
+#include "Sensors/Internal/Structs.h"
 
 class Distortion
 {

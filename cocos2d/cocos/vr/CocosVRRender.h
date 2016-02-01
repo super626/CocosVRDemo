@@ -2,6 +2,7 @@
 #ifndef __CardboardVR_Render__
 #define __CardboardVR_Render__
 
+#include "math/Mat4.h"
 
 class MagnetSensor;
 class HeadTracker;
@@ -32,7 +33,8 @@ public:
     
     const float* getHeadEuler();
     
-    HeadTransform* getHeadTransform() const { return headTransform; }
+    
+    void setHeadView(const cocos2d::Mat4& headview);
     
 protected:
     

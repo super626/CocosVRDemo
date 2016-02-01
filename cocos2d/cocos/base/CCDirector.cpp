@@ -301,7 +301,7 @@ void Director::setHeadView(const Mat4& headView)
 {
     if (_cardboardRender)
     {
-        _cardboardRender->getHeadTransform()->setHeadView(headView);
+        _cardboardRender->setHeadView(headView);
     }
 }
 #endif
