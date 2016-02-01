@@ -10,6 +10,7 @@
 #include "base/CCDirector.h"
 #include "platform/CCGLView.h"
 #include "platform/CCDevice.h"
+#include "base/ccMacros.h"
 
 static float convertDistanceFromPixelToInch(float pixels)
 {
