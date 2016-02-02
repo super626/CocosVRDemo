@@ -34,8 +34,9 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
     // Constants
     // ===========================================================
 
-    private HeadTracker headTracker;
-    private float[] headTransform = new float[16];
+    private HeadTracker headTracker = null;
+    private boolean isVREnabled = true;
+    private float[] headTransform = {1,0,0,0,  0,1,0,0,  0,0,1,0,  0,0,0,1};//new float[16];
     private final static long NANOSECONDSPERSECOND = 1000000000L;
     private final static long NANOSECONDSPERMICROSECOND = 1000000;
 
@@ -77,6 +78,10 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
         this.mLastTickInNanoSeconds = System.nanoTime();
         mNativeInitCompleted = true;
         headTracker = new HeadTracker(Cocos2dxActivity.getContext());
+        if (isVREnabled)
+        {
+            this.headTracker.startTracking();
+        }
     }
 
     @Override
@@ -90,13 +95,22 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
          * No need to use algorithm in default(60 FPS) situation,
          * since onDrawFrame() was called by system 60 times per second by default.
          */
-        this.headTracker.getLastHeadView(headTransform, 0);
-        boolean isVRMode = nativeIsVRModeEnabled();
-        if (isVRMode)
-            this.headTracker.startTracking();
-        else
-            this.headTracker.stopTracking();
-        nativeSetHeadView(headTransform);
+//        boolean newState = nativeIsVRModeEnabled();
+//        if (newState != isVREnabled)
+//        {
+//            isVREnabled = newState;
+//            if (isVREnabled)
+//                this.headTracker.startTracking();
+//            else
+//                this.headTracker.stopTracking();
+//        }
+        if (isVREnabled)
+        {
+            this.headTracker.getLastHeadView(headTransform, 0);
+            nativeSetHeadView(headTransform);
+        }
+
+
         if (sAnimationInterval <= 1.0 / 60 * Cocos2dxRenderer.NANOSECONDSPERSECOND) {
             Cocos2dxRenderer.nativeRender();
         } else {

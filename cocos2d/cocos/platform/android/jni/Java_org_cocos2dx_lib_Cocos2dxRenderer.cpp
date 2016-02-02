@@ -68,9 +68,9 @@ extern "C" {
         int size = env->GetArrayLength(transform);
         jfloat data[size];
         Mat4 matrix(data);
-        //matrix.transpose();
-        //env->GetFloatArrayRegion(transform, 0, size, data);
+        matrix.transpose();
+        env->GetFloatArrayRegion(transform, 0, size, data);
         
-        cocos2d::Director::getInstance()->setHeadView(matrix);
+        cocos2d::Director::getInstance()->setHeadView(data);
     }
 }
