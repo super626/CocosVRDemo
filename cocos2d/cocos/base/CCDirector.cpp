@@ -292,7 +292,7 @@ void Director::setVRModeEnabled(bool isVRMode)
 bool Director::isVRModeEnabled() const
 {
     if (_cardboardRender)
-        _cardboardRender->isVRModeEnable();
+        return _cardboardRender->isVRModeEnable();
     return false;
 }
 

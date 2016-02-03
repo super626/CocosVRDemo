@@ -95,15 +95,15 @@ public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
          * No need to use algorithm in default(60 FPS) situation,
          * since onDrawFrame() was called by system 60 times per second by default.
          */
-//        boolean newState = nativeIsVRModeEnabled();
-//        if (newState != isVREnabled)
-//        {
-//            isVREnabled = newState;
-//            if (isVREnabled)
-//                this.headTracker.startTracking();
-//            else
-//                this.headTracker.stopTracking();
-//        }
+        boolean newState = nativeIsVRModeEnabled();
+        if (newState != isVREnabled)
+        {
+            isVREnabled = newState;
+            if (isVREnabled)
+                this.headTracker.startTracking();
+            else
+                this.headTracker.stopTracking();
+        }
         if (isVREnabled)
         {
             this.headTracker.getLastHeadView(headTransform, 0);
