@@ -1,3 +1,9 @@
+/**
+ Copyright (c) 2015-2016 Chukong Technologies
+ 
+ 
+ Created by super626
+ */
 
 #ifndef __CardboardVR_Render__
 #define __CardboardVR_Render__

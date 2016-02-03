@@ -1,6 +1,10 @@
-//
-//
-//
+/**
+ Copyright (c) 2015-2016 Chukong Technologies
+ 
+ 
+ Created by super626
+ */
+
 
 #ifndef __HEAD_SENSOR_WRAPPER__
 #define __HEAD_SENSOR_WRAPPER__
