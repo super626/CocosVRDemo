@@ -292,7 +292,7 @@ void Director::setVRModeEnabled(bool isVRMode)
 bool Director::isVRModeEnabled() const
 {
     if (_cardboardRender)
-        _cardboardRender->isVRModeEnable();
+        return _cardboardRender->isVRModeEnable();
     return false;
 }
 
@@ -301,7 +301,7 @@ void Director::setHeadView(const Mat4& headView)
 {
     if (_cardboardRender)
     {
-        _cardboardRender->getHeadTransform()->setHeadView(headView);
+        _cardboardRender->setHeadView(headView);
     }
 }
 #endif

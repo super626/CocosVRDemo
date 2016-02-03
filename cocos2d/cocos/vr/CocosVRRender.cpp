@@ -165,6 +165,11 @@ const float* CocosVRRender::getHeadEuler()
     return headEuler;
 }
 
+void CocosVRRender::setHeadView(const cocos2d::Mat4& headview)
+{
+    headSensor->setHeadView(headview);
+}
+
 void CocosVRRender::render()
 {
     if (headMountedDisplay == nullptr)
